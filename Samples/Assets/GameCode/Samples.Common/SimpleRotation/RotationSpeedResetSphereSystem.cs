@@ -1,6 +1,7 @@
 ﻿using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
+using Unity.Burst;
 using Unity.Mathematics;
 using Samples.Common;
 using Unity.Transforms;
@@ -15,7 +16,7 @@ namespace Samples.Common
             [ReadOnly] public ComponentDataArray<RotationSpeedResetSphere> rotationSpeedResetSpheres;
             [ReadOnly] public ComponentDataArray<Radius> spheres;
             [ReadOnly] public ComponentDataArray<Position> positions;
-            public int Length;
+            public readonly int Length;
         }
 
         [Inject] RotationSpeedResetSphereGroup m_RotationSpeedResetSphereGroup;
@@ -24,12 +25,12 @@ namespace Samples.Common
         {
             public ComponentDataArray<RotationSpeed> rotationSpeeds;
             [ReadOnly] public ComponentDataArray<Position> positions;
-            public int Length;
+            public readonly int Length;
         }
 
         [Inject] RotationSpeedGroup m_RotationSpeedGroup;
 
-        [ComputeJobOptimization]
+        [BurstCompile]
         struct RotationSpeedResetSphereRotation : IJobParallelFor
         {
             public ComponentDataArray<RotationSpeed> rotationSpeeds;

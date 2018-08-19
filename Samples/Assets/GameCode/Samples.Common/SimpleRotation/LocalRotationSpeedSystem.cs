@@ -1,6 +1,7 @@
 ﻿using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
+using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Transforms;
 using UnityEngine;
@@ -13,12 +14,12 @@ namespace Samples.Common
         {
             public ComponentDataArray<LocalRotation> rotations;
             [ReadOnly] public ComponentDataArray<LocalRotationSpeed> rotationSpeeds;
-            public int Length;
+            public readonly int Length;
         }
 
         [Inject] private LocalRotationSpeedGroup m_LocalRotationSpeedGroup;
     
-        [ComputeJobOptimization]
+        [BurstCompile]
         struct LocalRotationSpeedLocalRotation : IJobParallelFor
         {
             public ComponentDataArray<LocalRotation> rotations;
@@ -32,7 +33,7 @@ namespace Samples.Common
                 {
                     rotations[i] = new LocalRotation
                     {
-                        Value = math.mul(math.normalize(rotations[i].Value), math.axisAngle(math.up(),speed*dt))
+                        Value = math.mul(math.normalize(rotations[i].Value), quaternion.axisAngle(math.up(),speed*dt))
                     };
                 }
             }

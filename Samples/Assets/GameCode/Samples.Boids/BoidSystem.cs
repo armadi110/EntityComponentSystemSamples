@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
+using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Mathematics.Experimental;
 using Unity.Transforms;
@@ -36,7 +35,7 @@ namespace Samples.Boids
             public NativeArray<int>             cellCount;
         }
 
-        [ComputeJobOptimization]
+        [BurstCompile]
         struct HashPositions : IJobParallelFor
         {
             [ReadOnly] public ComponentDataArray<Position> positions;
@@ -50,7 +49,7 @@ namespace Samples.Boids
             }
         }
 
-        [ComputeJobOptimization]
+        [BurstCompile]
         struct MergeCells : IJobNativeMultiHashMapMergedSharedKeyIndices
         {
             public NativeArray<int>                 cellIndices;
@@ -106,7 +105,7 @@ namespace Samples.Boids
             }
         }
 
-        [ComputeJobOptimization]
+        [BurstCompile]
         struct Steer : IJobParallelFor
         {
             [ReadOnly] public NativeArray<int>             cellIndices;
@@ -153,6 +152,24 @@ namespace Samples.Boids
                 
                 headings[index]                       = new Heading {Value = nextHeading};
             }
+        }
+
+        protected override void OnStopRunning()
+        {
+            for (var i = 0; i < m_PrevCells.Count; i++)
+            {
+                m_PrevCells[i].hashMap.Dispose();
+                m_PrevCells[i].cellIndices.Dispose();
+                m_PrevCells[i].copyTargetPositions.Dispose();
+                m_PrevCells[i].copyObstaclePositions.Dispose();
+                m_PrevCells[i].cellAlignment.Dispose();
+                m_PrevCells[i].cellSeparation.Dispose();
+                m_PrevCells[i].cellObstacleDistance.Dispose();
+                m_PrevCells[i].cellObstaclePositionIndex.Dispose();
+                m_PrevCells[i].cellTargetPistionIndex.Dispose();
+                m_PrevCells[i].cellCount.Dispose();
+            }
+            m_PrevCells.Clear();
         }
 
         protected override JobHandle OnUpdate(JobHandle inputDeps)
@@ -316,23 +333,6 @@ namespace Samples.Boids
             m_ObstacleGroup = GetComponentGroup(    
                 ComponentType.ReadOnly(typeof(BoidObstacle)),
                 ComponentType.ReadOnly(typeof(Position)));
-        }
-
-        protected override void OnDestroyManager()
-        {
-            for (int i = 0; i < m_PrevCells.Count; i++)
-            {
-                m_PrevCells[i].hashMap.Dispose();
-                m_PrevCells[i].cellIndices.Dispose();
-                m_PrevCells[i].copyTargetPositions.Dispose();
-                m_PrevCells[i].copyObstaclePositions.Dispose();
-                m_PrevCells[i].cellAlignment.Dispose();
-                m_PrevCells[i].cellSeparation.Dispose();
-                m_PrevCells[i].cellObstacleDistance.Dispose();
-                m_PrevCells[i].cellObstaclePositionIndex.Dispose();
-                m_PrevCells[i].cellTargetPistionIndex.Dispose();
-                m_PrevCells[i].cellCount.Dispose();
-            }
         }
     }
 }

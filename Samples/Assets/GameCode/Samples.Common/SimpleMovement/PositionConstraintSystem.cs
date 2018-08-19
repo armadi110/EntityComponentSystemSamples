@@ -1,6 +1,7 @@
 ﻿using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
+using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Transforms;
 
@@ -13,13 +14,13 @@ namespace Samples.Common
         {
             [ReadOnly] public ComponentDataArray<PositionConstraint> positionConstraints;
             [ReadOnly] public EntityArray                            entities;
-            public int                                               Length;
+            public readonly int                                      Length;
         }
 
         [Inject] private PositionConstraintsGroup  m_PositionContraintsGroup;
         [Inject] ComponentDataFromEntity<Position> m_TransformPositions;
 
-        [ComputeJobOptimization]
+        [BurstCompile]
         struct ContrainPositions : IJob
         {
             public ComponentDataFromEntity<Position>                 positions;

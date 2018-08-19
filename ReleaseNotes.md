@@ -1,7 +1,69 @@
+# 0.0.9
+## New Features
+* Galactic Conquest sample added
+    - Left click to select planets of the same color
+    - Right click to send ships from the selected planets to the planet under the mouse
+    - Can be set to play by itself if running the SceneSwitcher scene
+* GravityDemo sample added
+    - Press 1-7 on the keyboard while it's running to change to different simulations
+    - Left click to spawn new asteroids from the camera
+    - While holding right click, move the mouse and use AWSD buttons to control the camera
+
+# 0.0.8
+## New Features
+
+* EntityCommandBuffer.Concurrent added to support command buffer recording in parallel for-type jobs
+
+## Changes
+
+* Fixed the check for blittable types in NativeHashMap and NativeMultiHashMap values
+* Change deprecated attribute `[ComputeJobOptimization]` to `[BurstCompile]` (from namespace `Unity.Burst`)
+* Fixed bug with entity batch deletes (#149)
+
+# 0.0.7
+## New Features
+* New system for frustum culling meshes processed by MeshInstanceRendererSystem. Add a MeshCullingComponent to the entity and it will only be rendered when it is in view. The culling system does not take shadows into account.
+* New system for LOD of meshes rendered with MeshInstanceRendererSystem.
+    - MeshLODGroupComponent defines the lod sizes and active lod.
+	- MeshLODComponent references an Entity with a MeshLODGroupComponent and enables / disables itself based on the specified active lod. Transforms between mesh and group must match.
+* Entity worlds can now be serialized and deserialized to/from a binary format using SerializeUtility
+    - Use SerializeUtilityHybrid to support shared components
+		
+## Changes
+* EntityDebugger's display of ComponentGroups is improved:
+    - They will now wrap to multiple lines if there isn't enough space
+    - Generic types are displayed nicely
+    - Sort order is stable
+
+# 0.0.6
+## New Features
+* OnStartRunning() and OnStopRunning() added to ComponentSystem and JobComponentSystem
+    - OnStartRunning is called when a system's Enabled or ShouldStartRunning() becomes true
+    - OnStopRunning is called when a system's Enabled or ShouldStartRunning() becomes false. Also when the system will get destroyed.
+    - It will only send one of each in succession
+        - Example: Two OnStartRunning() cannot be triggered for a given system without an OnStopRunning() call in between
+* Experimental SOA containers updated, now split into two different types:
+    - NativeArrayFullSOA internally lays everything out in sub-arrays
+    - NativeArrayChunked8 internally lays data out in chunks of 32 bytes
+* Component type versions in Chunks (for broadphase change tracking)
+* Query Archetype and Chunk iteration (query archetypes matching all/any/none component filter, and e.g. allow component existence checks on chunk level.)
+* Add SystemStateComponentData (answer to Reactive system for add/delete components)
+* IComponentSystemPatch to auto run ComponentSystem[Job] after every ComponentSystem.
+
+## Changes
+* Make it possible to create EntityArray in addition to ComponentDataArray with the new ForEachFilter
+
 # 0.0.5
+## New Features
+* New API for faster filtering when going through all unique shared component values.
+	- var filter = group.CreateForEachFilter(uniqueTypes);
+	- var array = group.GetComponentDataArray<Type>(filter, i); // in a loop
+	- filter.Dispose();
+
 ## Changes
 * Throw ArgumentException when creating an entity with component data exceeding chunk size (64kb)
 * EntityManager.CreateComponentGroup is no longer public, use ComponentSystem.GetComponentGroup instead
+* Fix an incorrect hash calculation when resizing a HashMap
 
 # 0.0.4
 

@@ -1,6 +1,7 @@
 ﻿using Unity.Collections;
 using Unity.Entities;
 using Unity.Jobs;
+using Unity.Burst;
 using Unity.Mathematics;
 using Unity.Transforms2D;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace TwoStickPureExample
     {
         public struct Data
         {
-            public int Length;
+            public readonly int Length;
             [ReadOnly] public ComponentDataArray<Position2D> Position;
             public ComponentDataArray<EnemyShootState> ShootState;
         }
@@ -20,7 +21,7 @@ namespace TwoStickPureExample
 
         public struct PlayerData
         {
-            public int Length;
+            public readonly int Length;
             [ReadOnly] public ComponentDataArray<Position2D> Position;
             [ReadOnly] public ComponentDataArray<PlayerInput> PlayerInput;
         }
@@ -28,7 +29,7 @@ namespace TwoStickPureExample
         [Inject] private PlayerData m_Player;
         [Inject] private ShotSpawnBarrier m_ShotSpawnBarrier;
 
-        // [ComputeJobOptimization]
+        // [BurstCompile]
         // This cannot currently be burst compiled because CommandBuffer.SetComponent() accesses a static field.
         struct SpawnEnemyShots : IJob
         {

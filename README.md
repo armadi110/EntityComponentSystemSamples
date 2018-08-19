@@ -7,10 +7,10 @@ We have also provided a new forum where you can find more information and share 
 
 [Click here to visit the forum](https://unity3d.com/performance-by-default)
 
-## What is available today
+## What is in the build
 We have been working on a new high performance multithreaded system, that will make it possible for games to fully utilise the multicore processors available today without heavy programming headache. This is possible thanks to the new Entity Component System which provides a way to write performant code by default. Paired with the C# Job System and a new math-aware backend compiler technology named Burst. Unity can produce highly optimised code for the particular capabilities of the platform you’re compiling for. 
 
-These new systems are compatible with Unity 2018.1 and onwards
+[Download the beta build required here](https://unity3d.com/unity/beta-download)
 
 ## Entity Component System
 Offers a better approach to game design  that allows you to concentrate on the actual problems you are solving: the data and behavior that make up your game. It leverages the C# Job System and Burst Compiler enabling you to take full advantage of today's multicore processors. By moving from object-oriented to data-oriented design it will be easier for you to reuse the code and easier for others to understand and work on it
@@ -48,9 +48,7 @@ This is a set of projects that demonstrates different approaches with the MonoBe
 > Note: In Unity 2018.1 the new Project window is a little different because it offers you more than just 2D and 3D options.
 
 * Once the project is created then navigate in the Editor menu to: __Edit__ > __Project Settings__ > __Player__ > __Other Settings__ then set __Scripting Runtime Version__ to: __4.x equivalent__. This will cause Unity to restart.
-* Go to your project location in your computer's file manager.
-* Open the file _<project-name>/Packages/manifest.json_ in any text editor.
-* Copy and paste the [package manifest](Samples/Packages/manifest.json) into Packages/manifest.json file of your project.
+* Then navigate to __Window__ > __Package Manager__ and select the __Entities__ package and install it. This is also where you update the package to a newer version.
 
 ## Documentation
 Looking for information on how to get started or have specific questions? Visit our ECS & Job system documentation 
